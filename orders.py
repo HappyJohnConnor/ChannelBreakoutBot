@@ -29,7 +29,7 @@ class Orders:
                     closeid = order['id']
                 else:
                     # 15秒で確定できなかったら、成行
-                    positions = self.market.private_get_position()[1]
+                    positions = self.market.private_get_position()[0]
                     if positions['openOrderSellQty'] != 0 or positions['openOrderBuyQty'] != 0:
                         self.market.cancel_order(closeid)
                         self.market(side, size)
