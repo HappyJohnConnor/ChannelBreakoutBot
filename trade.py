@@ -4,6 +4,7 @@ import pytz
 import inspect
 import orders
 import json
+import traceback
 from datetime import datetime
 
 candle_duct = {'1m': 1, '5m': 5, '1h': 60}
@@ -50,10 +51,11 @@ def main():
         if judge == 1 and pos == -1:
             print("Buy!!")
             orders.make_order('buy', lot)
-
+            pos = 1
         elif judge == 0 and pos == 1:
             print("Sell!!")
             orders.make_order('sell', lot)
+            pos = -1
         print('\n')
         time.sleep(30)  # 一定時間(秒)待つ
 
