@@ -5,23 +5,23 @@ import time
 
 
 class Orders:
-    def __init__(self, market):
+    def __init__(self, exhange):
         f = open('config.json', 'r', encoding="utf-8")
         config = json.load(f)
-        self.market = market
+        self.exhange = exhange
         self.product_code = config['productCode']
 
     def limit(self, side, price, size):
-        return self.market.create_order(self.product_code, type='limit', side=side, price=price, amount=size)
+        return self.exhange.create_order(self.product_code, type='limit', side=side, price=price, amount=size)
 
     def market(self, side, size):
-        return self.market.create_order(self.product_code,
-                                        type='market', side=side, amount=size)
+        return self.exhange.create_order(self.product_code,
+                                         type='market', side=side, amount=size)
 
     def make_order(self, side, size):
         closeid = ''
         error_times = 0
-        last = self.market.fetch_ticker(self.product_code)['last']
+        last = self.exhange.fetch_ticker(self.product_code)['last']
         while True:
             try:
                 if closeid == '':
@@ -29,9 +29,9 @@ class Orders:
                     closeid = order['id']
                 else:
                     # 15秒で確定できなかったら、成行
-                    positions = self.market.private_get_position()[0]
+                    positions = self.exhange.private_get_position()[1]
                     if positions['openOrderSellQty'] != 0 or positions['openOrderBuyQty'] != 0:
-                        self.market.cancel_order(closeid)
+                        self.exhange.cancel_order(closeid)
                         self.market(side, size)
                         print(side + ' by market')
                         break
