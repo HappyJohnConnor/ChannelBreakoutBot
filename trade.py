@@ -103,13 +103,13 @@ def channel_break(period, candle_term):
                 product_code, timeframe=candle_term, since=past_time)
 
             highest = max([multi_candles[i][2] for i in range(period - 1)])
-            lowest = max([multi_candles[i][3] for i in range(period - 1)])
+            lowest = min([multi_candles[i][3] for i in range(period - 1)])
             print('highest:' + str(highest))
             print('lowest:' + str(lowest))
 
-            before_1min = timestamp - candle_num * 60000  # 1分は60000
+            before_1candle = timestamp - candle_num * 60000  # 1分は60000
             candle = bitmex.fetch_ohlcv(
-                product_code, timeframe=candle_term, since=before_1min)
+                product_code, timeframe=candle_term, since=before_1candle)
             high = candle[0][2]
             low = candle[0][3]
 
