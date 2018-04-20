@@ -7,7 +7,6 @@ import json
 import traceback
 from datetime import datetime
 
-candle_duct = {'1m': 1, '5m': 5, '1h': 60}
 
 bitmex = ccxt.bitmex({
     'apiKey': 'your key',
@@ -17,7 +16,7 @@ bitmex = ccxt.bitmex({
 f = open('config.json', 'r', encoding="utf-8")
 config = json.load(f)
 product_code = config['productCode']
-candle_term = config['candleTerm']
+candle_term = int(config['candleTerm'])
 period = config['period']
 if config['isTest']:
     apiKey = config['test']['key']
@@ -91,25 +90,25 @@ def get_balance():
 
 
 def channel_break(period, candle_term):
-    candle_num = candle_duct[candle_term]
     judge = 0
     error_times = 0
     while True:
         try:
             print(time_is())
             timestamp = round(datetime.now().timestamp()*1000)
-            past_time = timestamp - (period+1) * candle_num * 60000  # 1分は60000
-            multi_candles = bitmex.fetch_ohlcv(
-                product_code, timeframe=candle_term, since=past_time)
+            past_time = timestamp - (period+1) * \
+                candle_term * 60000  # 1分は60000
+            multi_candles = fetch_original_ohlcv(
+                product_code, candle_term, past_time)
 
             highest = max([multi_candles[i][2] for i in range(period - 1)])
             lowest = min([multi_candles[i][3] for i in range(period - 1)])
             print('highest:' + str(highest))
             print('lowest:' + str(lowest))
 
-            before_1candle = timestamp - candle_num * 60000  # 1分は60000
-            candle = bitmex.fetch_ohlcv(
-                product_code, timeframe=candle_term, since=before_1candle)
+            before_1candle = timestamp - candle_term * 60000  # 1分は60000
+            candle = fetch_original_ohlcv(
+                product_code, candle_term, before_1candle)
             high = candle[0][2]
             low = candle[0][3]
 
@@ -122,6 +121,7 @@ def channel_break(period, candle_term):
             if lowest > low:
                 judge = 0
                 break
+            print('\n')
             time.sleep(30)
 
         except:
@@ -135,6 +135,31 @@ def channel_break(period, candle_term):
                 time.sleep(10)
                 continue
     return judge
+
+
+def fetch_original_ohlcv(product_code, num, since):
+    candle_list = []
+    if num == 1:
+        candle_term = '1m'
+    elif 1 < num and num < 5:
+        candle_term = '1m'
+    elif num == 5:
+        candle_term = '5m'
+    elif 5 < num and num < 60:
+        candle_term = '5m'
+    elif num == 60:
+        candle_term = '1h'
+    elif 60 < num and num % 60 == 0:
+        candle_term = '1h'
+
+    candles = bitmex.fetch_ohlcv(
+        product_code, timeframe=candle_term, since=since)
+
+    for candle in candles:
+        if candle[0] % (1000 * 60 * num) == 0:
+            candle_list.append(candle)
+
+    return candle_list
 
 
 def time_is():
