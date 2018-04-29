@@ -1,0 +1,17 @@
+{
+    "productCode": "BTC/USD",
+    "real": {
+        "key": "your key",
+        "secret": "your secret"
+    },
+
+    "test": {
+        "key": "your key",
+        "secret": "your secret"
+    },
+
+    "isTest": true,
+    "candleTerm": 60,
+    "period": 17,
+    "lot": 100
+}
