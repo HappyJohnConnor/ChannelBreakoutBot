@@ -28,6 +28,19 @@ class Orders:
                     closeid = order['id']
                 else:
                     # 15秒で確定できなかったら、成行
+                    pos_list = self.exhange.private_get_position()
+                    self.logger.info(pos_list)
+                    positions = ''
+                    for pos in pos_list:
+                        if self.product_code == 'BTC/USD':
+                            if pos['symbol'] == 'XBTUSD':
+                                positions = pos
+                                break
+                        elif pos['symbol'] == self.product_code:
+                            positions = pos
+                            break
+                    if positions == '':
+                        self.logger.error('symbolが見つかりませんでした．')
                     positions = self.exhange.private_get_position()[1]
                     if positions['openOrderSellQty'] != 0 or positions['openOrderBuyQty'] != 0:
                         self.exhange.cancel_order(closeid)
