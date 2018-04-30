@@ -96,8 +96,8 @@ class ChannelBreakout:
                 before_1candle = timestamp - candle_term * 60000  # 1分は60000
                 candle = self.fetch_original_ohlcv(
                     product_code, candle_term, before_1candle)
-                high = candle[0][2]
-                low = candle[0][3]
+                high = candle[-1][2]
+                low = candle[-1][3]
                 self.logger.info('high:{}'.format(high))
                 self.logger.info('low:{}\n'.format(low))
 
