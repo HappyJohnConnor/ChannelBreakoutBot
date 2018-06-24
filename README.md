@@ -1,4 +1,4 @@
-# ChannelBreakoutBot
+# ChannelBreakoutBot サンプルコード
 ## 使い方
 configファイルにBitmexのAPIキーを入力後，`python trade.py`で実行．時間足は1分から60分，またはそれ以降まで．`isTest`でBitmexかBitmex Testnetで行うかを判断．
 
@@ -10,6 +10,9 @@ configファイルにBitmexのAPIキーを入力後，`python trade.py`で実行
 
 ## 注意点
 本ソフトウェアで被った損害は一切保証しません．
+
+## 本ソフトウェアのクオリティについて
+あくまで，サンプルコードであり，ローカル環境で日々切磋琢磨しております．
 
 ## Lisence
 MIT
