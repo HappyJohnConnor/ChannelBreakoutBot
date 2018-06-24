@@ -11,7 +11,7 @@
     },
 
     "isTest": true,
-    "candleTerm": 60,
-    "period": 17,
-    "lot": 100
+    "period": "1h",
+    "count": 17,
+    "lot": 2
 }

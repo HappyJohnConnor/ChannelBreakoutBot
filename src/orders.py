@@ -1,14 +1,15 @@
 import json
 import time
+import log
 
 
 class Orders:
-    def __init__(self, exhange, logger):
+    def __init__(self, exhange):
         f = open('config.json', 'r', encoding="utf-8")
         config = json.load(f)
         self.exhange = exhange
         self.product_code = config['productCode']
-        self.logger = logger
+        self.logger = log.get_custom_logger(__name__)
 
     def limit(self, side, price, size):
         return self.exhange.create_order(self.product_code, type='limit', side=side, price=price, amount=size)
